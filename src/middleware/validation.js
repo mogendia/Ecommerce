@@ -55,3 +55,12 @@ export const validation = (schema, considerHeaders = false) => {
     return next();
   };
 };
+
+
+export const graphValidation =async (schema, inputsData) => {
+ 
+ const error = schema.validate(inputsData, { abortEarly: false });
+ if (error) {throw new Error(error.message)} 
+    return true;
+  };
+

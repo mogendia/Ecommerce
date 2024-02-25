@@ -12,30 +12,13 @@ import subcategoryRouter from "./modules/subcategory/subcategory.router.js";
 import userRouter from "./modules/user/user.router.js";
 import { globalErrorHandling } from "./utils/errorHandling.js";
 import cors from "cors";
+import { graphql } from "graphql";
+import { createHandler } from "graphql-http/lib/use/express";
+import { productSchema } from "./modules/product/GraphQl/schema.js";
 
 const initApp = (app, express) => {
-  var whitelist = ["http://example1.com", "http://example2.com"];
-  //   var corsOptions = {
-  //   origin: function (origin, callback) {
-  //     if (whitelist.indexOf(origin) !== -1) {
-  //       callback(null, true)
-  //     } else {
-  //       callback(new Error('Not allowed by CORS'))
-  //     }
-  //   }
-  // }
      app.use(cors())
 
-  // app.use(async (req, res, next) => {
-  //   if (!whitelist.includes(req.header("origin"))) {
-  //     return next(new Error("Not Allowed By CORS", 403));
-  //   }
-  //   await res.header("Access-Control-Allow-Origin", "*");
-  //   await res.header("Access-Control-Allow-Header", "*");
-  //   await res.header("Access-Control-Allow-Private-Network", "true");
-  //   await res.header("Access-Control-Allow-Methods", "*");
-  //   next();
-  // });
   if (process.env.MOOD == "DEV") {
     app.use(morgan("dev"));
   } else {
@@ -43,6 +26,11 @@ const initApp = (app, express) => {
   }
   //convert Buffer Data
   app.use(express.json({}));
+  // handle graphql api
+  app.use('/graphql',createHandler({
+    schema:productSchema,
+    
+  }))
   //Setup API Routing
   app.get(`/`, (req,res,next) => {
    return res.status(200).json({message:'Welcome To E-Commerce App'})

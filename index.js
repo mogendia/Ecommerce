@@ -8,7 +8,7 @@ import express from "express";
 import initApp from "./src/index.router.js";
 import chalk from "chalk";
 const app = express();
-app.set("case sensitive routing", true);
+//app.set("case sensitive routing", true);
 
 // setup port and the baseUrl
 const port = process.env.PORT || 5000;

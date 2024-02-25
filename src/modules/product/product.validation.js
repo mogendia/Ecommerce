@@ -51,3 +51,11 @@ export const updateProduct = joi.object({
       })
       .required(),
   }).required();
+
+
+  export const updateStock = joi.object({
+    id:generalFields.id,
+    stock:joi.number().positive().integer().min(1).required(),
+    authorization:joi.string().required()
+  }).required();
+  

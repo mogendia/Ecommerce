@@ -11,23 +11,23 @@ export const auth = (accessRoles = []) => {
     const { authorization } = req.headers;
 
     if (!authorization?.startsWith(process.env.BEARER_KEY)) {
-      return next(new Error("In-valid bearer key", { cause: 400 }));
+      return next(new Error("In-valid bearer key"));
     }
     const token = authorization.split(process.env.BEARER_KEY)[1];
 
     if (!token) {
-      return next(new Error("In-valid token", { cause: 400 }));
+      return next(new Error("In-valid token"));
     }
 
     const decoded = verifyToken({ token });
     if (!decoded?.id) {
-      return next(new Error("In-valid token payload", { cause: 400 }));
+      return next(new Error("In-valid token payload"));
     }
     const user = await userModel
       .findById(decoded.id)
       .select("userName email image role changePasswordTime");
     if (parseInt(user.changePasswordTime) > decoded.iat) {
-      return next(new Error("Expired Token ", { cause: 400 }));
+      return next(new Error("Expired Token "));
     }
     if (!user) {
       return next(new Error("Not Register Account", { cause: 401 }));
@@ -38,4 +38,36 @@ export const auth = (accessRoles = []) => {
     req.user = user;
     return next();
   });
+};
+export const authGraph = (authorization,accessRoles = []) => {
+  try{
+    if (!authorization?.startsWith(process.env.BEARER_KEY)) {
+      throw new Error("In-valid bearer key");
+    }
+    const token = authorization.split(process.env.BEARER_KEY)[1];
+
+    if (!token) {
+      throw new Error("In-valid token");
+    }
+
+    const decoded = verifyToken({ token });
+    if (!decoded?.id) {
+      throw new Error("In-valid token payload");
+    }
+    if (parseInt(user.changePasswordTime) > decoded.iat) {
+      throw new Error("Expired Token ");
+    }
+    if (!user) {
+      throw new Error("Not Register Account");
+    }
+    if (!accessRoles.includes(user.role)) { // may be role
+      throw new Error("un authorized user");
+    }
+    return user;
+
+  }catch{
+    throw new Error(error)
+  }
+ 
+    
 };
