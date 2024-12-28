@@ -15,27 +15,7 @@ import cors from "cors";
 
 const initApp = (app, express) => {
   var whitelist = ["http://example1.com", "http://example2.com"];
-  //   var corsOptions = {
-  //   origin: function (origin, callback) {
-  //     if (whitelist.indexOf(origin) !== -1) {
-  //       callback(null, true)
-  //     } else {
-  //       callback(new Error('Not allowed by CORS'))
-  //     }
-  //   }
-  // }
      app.use(cors())
-
-  // app.use(async (req, res, next) => {
-  //   if (!whitelist.includes(req.header("origin"))) {
-  //     return next(new Error("Not Allowed By CORS", 403));
-  //   }
-  //   await res.header("Access-Control-Allow-Origin", "*");
-  //   await res.header("Access-Control-Allow-Header", "*");
-  //   await res.header("Access-Control-Allow-Private-Network", "true");
-  //   await res.header("Access-Control-Allow-Methods", "*");
-  //   next();
-  // });
   if (process.env.MOOD == "DEV") {
     app.use(morgan("dev"));
   } else {
